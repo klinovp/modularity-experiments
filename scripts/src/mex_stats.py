@@ -11,22 +11,27 @@ import sys
 stats_folder = '/home/pavel/tmp/sem-loc/Random-Mex-All/Stats/'
 stats_prefix = '.stat.txt'
 
+_base_module_size_col_ = 4
+_base_module_time_col_ = 5
+_module_size_col_ = 6
+_module_time_col_ = 7
+
 def acc_stats(stats_list, line):
     arr = line[:-1].split(',')
     
     if (arr[0].isdigit()):
-        sem_time = float(arr[5]) if arr[5] != '0' else 1.0
-        sem_size = int(arr[4])
-        mex_size = int(arr[6])
-        mex_time = float(arr[7])
-        diff = sem_size - mex_size;
+        base_mod_time = float(arr[_base_module_time_col_]) if arr[_base_module_time_col_] != '0' else 1.0
+        base_mod_size = int(arr[_base_module_size_col_])
+        mod_size = int(arr[_module_size_col_])
+        mod_time = float(arr[_module_time_col_])
+        diff = base_mod_size - mod_size;
         
         stats_list[0] += 1
-        stats_list[1] += (1 if mex_size != sem_size else 0)
+        stats_list[1] += (1 if mod_size != base_mod_size else 0)
         stats_list[2] += diff
         
-        if (sem_size > 0):
-            rel_diff = 1.0 * diff / sem_size
+        if (base_mod_size > 0):
+            rel_diff = 1.0 * diff / base_mod_size
             stats_list[3] += rel_diff
 	
 				    #update min and max for both absolute and relative differences
@@ -40,7 +45,7 @@ def acc_stats(stats_list, line):
             stats_list[7] = max(stats_list[7], rel_diff)
         
 				#time ratio
-        stats_list[8] += (mex_time / sem_time)
+        stats_list[8] += (mod_time / base_mod_time)
         '''
         if (mex_size < sem_size):
             print arr
